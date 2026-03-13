@@ -91,5 +91,74 @@ https://fakestoreapi.com/
 - Flutter
 - Dart
 
-Các thư viện chính:
+Các thư viện chính: 
+provider
+http
+carousel_slider
+badges
+shared_preferences
 
+# Cấu trúc thư mục
+lib
+│
+├── main.dart
+│
+├── models
+│ ├── product.dart
+│ ├── cart_item.dart
+│ └── order.dart
+│
+├── screens
+│ ├── home_screen.dart
+│ ├── product_detail_screen.dart
+│ ├── cart_screen.dart
+│ ├── checkout_screen.dart
+│ └── order_history_screen.dart
+│
+├── widgets
+│ ├── product_card.dart
+│ ├── banner_slider.dart
+│ ├── category_grid.dart
+│ ├── cart_item_widget.dart
+│ └── add_to_cart_sheet.dart
+│
+├── providers
+│ ├── cart_provider.dart
+│ └── order_provider.dart
+│
+├── services
+│ ├── product_service.dart
+│ └── storage_service.dart
+│
+└── utils
+├── constants.dart
+└── format_price.dart
+
+---
+
+# State Management
+
+Ứng dụng sử dụng **Provider** để quản lý trạng thái.
+
+Provider được dùng cho:
+
+- Quản lý giỏ hàng
+- Cập nhật badge số lượng sản phẩm
+- Tính tổng tiền
+- Quản lý đơn hàng
+
+---
+
+# Lưu trữ dữ liệu
+
+Giỏ hàng có thể được lưu bằng: SharedPreferences
+Điều này giúp:
+- Dữ liệu giỏ hàng không bị mất khi tắt ứng dụng
+- Người dùng mở lại app vẫn giữ nguyên giỏ hàng
+
+# Demo
+Video demo ứng dụng:
+
+# Tác giả
+Nhóm: G10_C3
+Môn học: Lập trình Mobile
