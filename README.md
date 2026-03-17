@@ -159,6 +159,71 @@ Giỏ hàng có thể được lưu bằng: SharedPreferences
 # Demo
 Video demo ứng dụng:
 
+---
+
+# Thông tin nhánh (Branch)
+
+## Quy ước đặt tên nhánh
+
+Dự án sử dụng quy ước đặt tên nhánh theo định dạng:
+
+```
+copilot/<tên-thành-viên>-<tính-năng>
+```
+
+Ví dụ: `copilot/ngoc-anh-home-screen`
+
+---
+
+## Nhánh `copilot/ngoc-anh-home-screen`
+
+| Thông tin | Chi tiết |
+|---|---|
+| **Tên nhánh** | `copilot/ngoc-anh-home-screen` |
+| **Thành viên phụ trách** | Ngọc Anh |
+| **Tính năng** | Trang chủ (Home Screen) |
+| **Hỗ trợ bởi** | GitHub Copilot (tiền tố `copilot/`) |
+
+### Mục đích
+
+Nhánh này được tạo ra để **triển khai tính năng Trang chủ** của ứng dụng Mini E-Commerce, bao gồm toàn bộ giao diện và logic của màn hình chính.
+
+### Nội dung đã thực hiện trong nhánh này
+
+**Màn hình chính (`home_screen.dart`):**
+- ✅ Hiển thị danh sách sản phẩm dạng **GridView** 2 cột
+- ✅ **Thanh tìm kiếm** với lọc theo thời gian thực và nút xóa
+- ✅ **Banner quảng cáo** dạng Carousel Slider tự động cuộn
+- ✅ **Danh mục sản phẩm** dạng ChoiceChip cuộn ngang
+- ✅ **Infinite Scrolling** – tải thêm sản phẩm khi cuộn đến cuối
+- ✅ **Pull to Refresh** – làm mới dữ liệu bằng cách kéo xuống
+- ✅ **Icon giỏ hàng** với Badge hiển thị số lượng sản phẩm
+
+**Các lớp hỗ trợ được triển khai:**
+- `models/product.dart` – Model sản phẩm từ FakeStore API
+- `models/cart_item.dart` – Model mục trong giỏ hàng
+- `services/api_service.dart` – Gọi API FakeStore
+- `services/product_service.dart` – Lớp trung gian dịch vụ sản phẩm
+- `services/storage_service.dart` – Lưu giỏ hàng với SharedPreferences
+- `providers/cart_provider.dart` – Quản lý trạng thái giỏ hàng (Provider)
+- `widgets/product_card.dart` – Widget thẻ sản phẩm
+- `widgets/banner_slider.dart` – Widget carousel banner
+- `widgets/category_grid.dart` – Widget danh mục
+
+### Câu hỏi thường gặp
+
+**Q: Nếu đổi tên nhánh trên GitHub thì commit cũ có bị mất không?**  
+A: **Không.** Các commit được lưu bằng mã SHA duy nhất, không phụ thuộc vào tên nhánh.  
+Khi đổi tên nhánh, toàn bộ lịch sử commit vẫn được giữ nguyên — chỉ có tên "nhãn" trỏ tới commit đó thay đổi.  
+Nếu bạn đã clone về máy với tên cũ, chỉ cần chạy:
+```bash
+git fetch origin
+git branch -m <tên-cũ> <tên-mới>
+git branch -u origin/<tên-mới>
+```
+
+---
+
 # Tác giả
 Nhóm: G10_C3
 Môn học: Lập trình Mobile
