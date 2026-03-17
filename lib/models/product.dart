@@ -5,6 +5,7 @@ class Product {
   final String description;
   final String category;
   final String image;
+  final List<String> images;
   final double rating;
   final int ratingCount;
 
@@ -15,6 +16,7 @@ class Product {
     required this.description,
     required this.category,
     required this.image,
+    this.images = const [],
     required this.rating,
     required this.ratingCount,
   });
@@ -24,13 +26,26 @@ class Product {
     final rateValue = ratingJson is Map ? ratingJson['rate'] : 0;
     final countValue = ratingJson is Map ? ratingJson['count'] : 0;
 
+    final imageValue = json['image']?.toString() ?? '';
+    final rawImages = json['images'];
+    final images = rawImages is List
+        ? rawImages
+            .map((e) => e.toString())
+            .where((e) => e.isNotEmpty)
+            .toList()
+        : <String>[];
+    final resolvedImages = images.isNotEmpty
+        ? images
+        : (imageValue.isNotEmpty ? [imageValue] : <String>[]);
+
     return Product(
       id: (json['id'] as num?)?.toInt() ?? 0,
       title: json['title']?.toString() ?? '',
       price: (json['price'] as num?)?.toDouble() ?? 0,
       description: json['description']?.toString() ?? '',
       category: json['category']?.toString() ?? '',
-      image: json['image']?.toString() ?? '',
+      image: imageValue,
+      images: resolvedImages,
       rating: (rateValue as num?)?.toDouble() ?? 0,
       ratingCount: (countValue as num?)?.toInt() ?? 0,
     );

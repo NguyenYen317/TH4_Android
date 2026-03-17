@@ -92,7 +92,7 @@ class ProductCard extends StatelessWidget {
                   Text(
                     formatPrice(product.price * 25000),
                     style: const TextStyle(
-                      color: Color(0x0096D6FF),
+                      color: Color(0xFFE53935),
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                     ),
@@ -107,6 +107,8 @@ class ProductCard extends StatelessWidget {
                         color: Color(0xFF9A9A9A),
                         fontSize: 11,
                         decoration: TextDecoration.lineThrough,
+                        decorationColor: Color(0xFF9A9A9A),
+                        decorationThickness: 2,
                       ),
                     ),
                   ),
