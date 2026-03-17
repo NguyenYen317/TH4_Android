@@ -9,6 +9,8 @@ import 'package:th4_e_commerce_app/widgets/banner_slider.dart';
 import 'package:th4_e_commerce_app/widgets/category_grid.dart';
 import 'package:th4_e_commerce_app/widgets/product_card.dart';
 
+import 'package:th4_e_commerce_app/screens/product_detail_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -300,13 +302,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         return ProductCard(
                           product: product,
                           onTap: () {
-                            context.read<CartProvider>().addProduct(product);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Đã thêm ${product.title} vào giỏ hàng',
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => ProductDetailScreen(
+                                  product: product,
                                 ),
-                                duration: const Duration(milliseconds: 850),
                               ),
                             );
                           },
