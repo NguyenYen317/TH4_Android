@@ -1,12 +1,12 @@
 class AppConstants {
   static const String apiBaseUrl = 'https://fakestoreapi.com';
   static const int homePageSize = 8;
+  static const String homeAppBarTitle = 'TH4 - Nhóm 10';
 
-
-  static const int colorSeaLight = 0xE0F7FF; 
-  static const int colorSeaPrimary = 0x0096D6; 
-  static const int colorSeaDark = 0x0076AA; 
-  static const int colorSeaExtraDark = 0x005580; 
+  static const int colorSeaLight = 0xE0F7FF;
+  static const int colorSeaPrimary = 0x0096D6;
+  static const int colorSeaDark = 0x0076AA;
+  static const int colorSeaExtraDark = 0x005580;
 
   // Backward compatibility
   static const int colorTikiBlue = colorSeaPrimary;
