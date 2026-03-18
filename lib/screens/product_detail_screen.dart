@@ -5,6 +5,7 @@ import 'package:th4_e_commerce_app/models/product.dart';
 import 'package:th4_e_commerce_app/utils/format_price.dart';
 import 'package:th4_e_commerce_app/widgets/add_to_cart_sheet.dart';
 import 'package:th4_e_commerce_app/providers/cart_provider.dart';
+import 'package:th4_e_commerce_app/screens/cart_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({super.key, required this.product});
@@ -55,11 +56,46 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF0076AA),
         elevation: 0,
+        foregroundColor: Colors.white,
         title: Text(
           product.title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
+        actions: [
+          Consumer<CartProvider>(
+            builder: (context, cart, _) {
+              return badges.Badge(
+                showBadge: cart.totalItems != 0,
+                badgeContent: Text(
+                  '${cart.totalItems}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+                badgeStyle: const badges.BadgeStyle(
+                  badgeColor: Color(0xFFFFD54F),
+                  padding: EdgeInsets.all(5),
+                ),
+                position: badges.BadgePosition.topEnd(
+                  top: 4,
+                  end: 4,
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CartScreen()),
+                    );
+                  },
+                  icon: const Icon(Icons.shopping_cart_outlined),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: ListView(
         padding: EdgeInsets.zero,
@@ -177,7 +213,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     child: Row(
                       children: [
-                        Expanded(
+                        const Expanded(
                           child: Text(
                             'Ch\u1ecdn K\u00edch c\u1ee1, M\u00e0u s\u1eafc',
                             style: TextStyle(
@@ -246,7 +282,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               BoxShadow(
                 color: Colors.black.withOpacity(0.06),
                 blurRadius: 10,
-                offset: Offset(0, -2),
+                offset: const Offset(0, -2),
               ),
             ],
           ),
@@ -268,7 +304,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       color: const Color(0xFF0096D6),
                     ),
                     Consumer<CartProvider>(
-                      builder: (context, cart, _) {return badges.Badge(
+                      builder: (context, cart, _) {
+                        return badges.Badge(
                           showBadge: cart.totalItems != 0,
                           badgeContent: Text(
                             '${cart.totalItems}',
@@ -287,11 +324,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                           child: IconButton(
                             onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('B\u1ea1n \u0111\u00e3 m\u1edf gi\u1ecf h\u00e0ng (demo)'),
-                                  duration: Duration(milliseconds: 900),
-                                ),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const CartScreen()),
                               );
                             },
                             icon: const Icon(Icons.shopping_cart_outlined),
@@ -347,4 +382,3 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 }
-
