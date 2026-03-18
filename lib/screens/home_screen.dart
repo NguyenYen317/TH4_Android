@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:th4_e_commerce_app/models/product.dart';
 import 'package:th4_e_commerce_app/providers/cart_provider.dart';
+import 'package:th4_e_commerce_app/screens/cart_screen.dart';
 import 'package:th4_e_commerce_app/services/product_service.dart';
 import 'package:th4_e_commerce_app/utils/constants.dart';
 import 'package:th4_e_commerce_app/widgets/banner_slider.dart';
@@ -238,10 +239,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       position: badges.BadgePosition.topEnd(top: 4, end: 2),
                       child: IconButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Bạn đã mở giỏ hàng (demo home)'),
-                              duration: Duration(milliseconds: 900),
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const CartScreen(),
                             ),
                           );
                         },
