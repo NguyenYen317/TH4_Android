@@ -16,12 +16,17 @@ class AddToCartSheet extends StatefulWidget {
 class _AddToCartSheetState extends State<AddToCartSheet> {
   String _selectedSize = 'M';
   int _quantity = 1;
-  int _selectedColor = 0;
+  int _selectedColorIndex = 0;
+
+  final List<Map<String, dynamic>> _availableColors = [
+    {'name': 'Xanh', 'color': Colors.blue},
+    {'name': 'Đỏ', 'color': Colors.red},
+    {'name': 'Đen', 'color': Colors.black},
+  ];
 
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
-    final colors = [Colors.blue, Colors.red];
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -56,13 +61,14 @@ class _AddToCartSheetState extends State<AddToCartSheet> {
                       product.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       formatPrice(product.price * 25000),
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF0096D6),
+                        color: Color(0xFFE53935),
                       ),
                     ),
                   ],
@@ -75,12 +81,17 @@ class _AddToCartSheetState extends State<AddToCartSheet> {
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
-            children: ['S', 'M', 'L'].map((s) {
+            children: ['S', 'M', 'L', 'XL'].map((s) {
               final selected = s == _selectedSize;
               return ChoiceChip(
                 label: Text(s),
                 selected: selected,
                 onSelected: (_) => setState(() => _selectedSize = s),
+                selectedColor: const Color(0xFF0096D6).withOpacity(0.2),
+                labelStyle: TextStyle(
+                  color: selected ? const Color(0xFF0096D6) : Colors.black,
+                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                ),
               );
             }).toList(),
           ),
@@ -88,19 +99,31 @@ class _AddToCartSheetState extends State<AddToCartSheet> {
           const Text('Màu sắc', style: TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           Row(
-            children: List.generate(colors.length, (i) {
+            children: List.generate(_availableColors.length, (i) {
               return GestureDetector(
-                onTap: () => setState(() => _selectedColor = i),
+                onTap: () => setState(() => _selectedColorIndex = i),
                 child: Container(
-                  margin: const EdgeInsets.only(right: 8),
-                  width: 34,
-                  height: 34,
+                  margin: const EdgeInsets.only(right: 12),
+                  padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: colors[i],
                     shape: BoxShape.circle,
-                    border: _selectedColor == i
-                        ? Border.all(width: 2, color: Colors.black)
-                        : null,
+                    border: _selectedColorIndex == i
+                        ? Border.all(width: 2, color: const Color(0xFF0096D6))
+                        : Border.all(width: 2, color: Colors.transparent),
+                  ),
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: _availableColors[i]['color'],
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -114,46 +137,68 @@ class _AddToCartSheetState extends State<AddToCartSheet> {
                 'Số lượng',
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: _quantity > 1
-                        ? () => setState(() => _quantity--)
-                        : null,
-                    icon: const Icon(Icons.remove_circle_outline),
-                  ),
-                  Text('$_quantity', style: const TextStyle(fontSize: 16)),
-                  IconButton(
-                    onPressed: () => setState(() => _quantity++),
-                    icon: const Icon(Icons.add_circle_outline),
-                  ),
-                ],
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: _quantity > 1
+                          ? () => setState(() => _quantity--)
+                          : null,
+                      icon: const Icon(Icons.remove),
+                      constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      padding: EdgeInsets.zero,
+                    ),
+                    Container(
+                      width: 40,
+                      alignment: Alignment.center,
+                      child: Text('$_quantity', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    ),
+                    IconButton(
+                      onPressed: () => setState(() => _quantity++),
+                      icon: const Icon(Icons.add),
+                      constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      padding: EdgeInsets.zero,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Row(
             children: [
               Expanded(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF0096D6),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                   onPressed: () {
+                    final colorName = _availableColors[_selectedColorIndex]['name'];
                     context.read<CartProvider>().addProduct(
                       product,
                       quantity: _quantity,
+                      size: _selectedSize,
+                      color: colorName,
                     );
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Thêm thành công'),
-                        duration: Duration(milliseconds: 900),
+                      SnackBar(
+                        content: Text('Đã thêm $_quantity ${product.title} ($colorName, $_selectedSize) vào giỏ hàng'),
+                        duration: const Duration(seconds: 2),
+                        behavior: SnackBarBehavior.floating,
                       ),
                     );
                   },
-                  child: const Text('Xác nhận'),
+                  child: const Text('XÁC NHẬN', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
             ],

@@ -15,5 +15,7 @@ class CartItem {
     this.color = 'Xanh',
   });
 
+  String get key => '${product.id}-$size-$color';
+
   double get subTotal => product.price * quantity;
 }

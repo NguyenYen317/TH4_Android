@@ -3,7 +3,7 @@ import 'package:th4_e_commerce_app/models/cart_item.dart';
 import 'package:th4_e_commerce_app/models/product.dart';
 
 class CartProvider extends ChangeNotifier {
-  final Map<int, CartItem> _items = <int, CartItem>{};
+  final Map<String, CartItem> _items = <String, CartItem>{};
 
   List<CartItem> get items => _items.values.toList();
 
@@ -21,20 +21,28 @@ class CartProvider extends ChangeNotifier {
 
   bool get hasAnySelected => _items.values.any((element) => element.selected);
 
-  bool containsProduct(int productId) => _items.containsKey(productId);
+  String _generateKey(int productId, String size, String color) {
+    return '$productId-$size-$color';
+  }
 
-  void addProduct(Product product, {int quantity = 1}) {
-    final existing = _items[product.id];
+  void addProduct(Product product, {int quantity = 1, String size = 'M', String color = 'Xanh'}) {
+    final key = _generateKey(product.id, size, color);
+    final existing = _items[key];
     if (existing != null) {
       existing.quantity += quantity;
     } else {
-      _items[product.id] = CartItem(product: product, quantity: quantity);
+      _items[key] = CartItem(
+        product: product,
+        quantity: quantity,
+        size: size,
+        color: color,
+      );
     }
     notifyListeners();
   }
 
-  void removeProduct(int productId) {
-    _items.remove(productId);
+  void removeProduct(String key) {
+    _items.remove(key);
     notifyListeners();
   }
 
@@ -43,15 +51,15 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleSelection(int productId) {
-    final item = _items[productId];
+  void toggleSelection(String key) {
+    final item = _items[key];
     if (item == null) return;
     item.selected = !item.selected;
     notifyListeners();
   }
 
-  void setSelection(int productId, bool selected) {
-    final item = _items[productId];
+  void setSelection(String key, bool selected) {
+    final item = _items[key];
     if (item == null) return;
     item.selected = selected;
     notifyListeners();
@@ -64,15 +72,15 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void incrementQuantity(int productId) {
-    final item = _items[productId];
+  void incrementQuantity(String key) {
+    final item = _items[key];
     if (item == null) return;
     item.quantity += 1;
     notifyListeners();
   }
 
-  void decrementQuantity(int productId) {
-    final item = _items[productId];
+  void decrementQuantity(String key) {
+    final item = _items[key];
     if (item == null) return;
     if (item.quantity > 1) {
       item.quantity -= 1;
