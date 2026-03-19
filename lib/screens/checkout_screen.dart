@@ -4,6 +4,7 @@ import 'package:th4_e_commerce_app/providers/cart_provider.dart';
 import 'package:th4_e_commerce_app/models/cart_item.dart';
 import 'package:th4_e_commerce_app/providers/order_provider.dart';
 import 'package:th4_e_commerce_app/models/order.dart';
+import 'package:th4_e_commerce_app/utils/format_price.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -71,7 +72,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     });
                   },
                 ),
-                const Text('Thanh toán khi nhận hàng (COD)'),
+                const Text('COD'),
+                const SizedBox(width: 20),
                 Radio<String>(
                   value: 'Momo',
                   groupValue: _paymentMethod,
@@ -96,6 +98,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 itemBuilder: (context, index) {
                   final CartItem item = selectedItems[index];
                   return ListTile(
+                    contentPadding: EdgeInsets.zero,
                     leading: Image.network(
                       item.product.image,
                       width: 48,
@@ -106,30 +109,34 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       item.product.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 14),
                     ),
                     subtitle: Text(
                       'SL: ${item.quantity} | Size: ${item.size} | Màu: ${item.color}',
+                      style: const TextStyle(fontSize: 12),
                     ),
                     trailing: Text(
-                      '${item.subTotal.toStringAsFixed(0)}đ',
-                      style: const TextStyle(color: Colors.red),
+                      formatPrice(item.subTotal * 25000),
+                      style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                     ),
                   );
                 },
               ),
             ),
+            const Divider(),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
                   'Tổng thanh toán:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
-                  '${total.toStringAsFixed(0)}đ',
+                  formatPrice(total * 25000),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
+                    fontSize: 18,
                     color: Colors.red,
                   ),
                 ),
@@ -166,6 +173,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           cart.removeProduct(item.key);
                         }
                         // Hiện dialog thành công
+                        if (!mounted) return;
                         await showDialog(
                           context: context,
                           builder: (ctx) => AlertDialog(
@@ -191,8 +199,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   backgroundColor: const Color(0xFF0096D6),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-                child: const Text('Đặt hàng', style: TextStyle(fontSize: 16)),
+                child: const Text('Đặt hàng', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
           ],

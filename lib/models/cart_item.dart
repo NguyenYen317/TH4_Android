@@ -18,4 +18,24 @@ class CartItem {
   String get key => '${product.id}-$size-$color';
 
   double get subTotal => product.price * quantity;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'product': product.toJson(),
+      'quantity': quantity,
+      'selected': selected,
+      'size': size,
+      'color': color,
+    };
+  }
+
+  factory CartItem.fromJson(Map<String, dynamic> json) {
+    return CartItem(
+      product: Product.fromJson(json['product']),
+      quantity: json['quantity'],
+      selected: json['selected'] ?? true,
+      size: json['size'] ?? 'M',
+      color: json['color'] ?? 'Xanh',
+    );
+  }
 }
