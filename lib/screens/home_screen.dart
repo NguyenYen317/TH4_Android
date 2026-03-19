@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:th4_e_commerce_app/models/product.dart';
 import 'package:th4_e_commerce_app/providers/cart_provider.dart';
 import 'package:th4_e_commerce_app/screens/cart_screen.dart';
+import 'package:th4_e_commerce_app/screens/order_history_screen.dart';
 import 'package:th4_e_commerce_app/services/product_service.dart';
 import 'package:th4_e_commerce_app/utils/constants.dart';
 import 'package:th4_e_commerce_app/widgets/banner_slider.dart';
@@ -186,6 +187,50 @@ class _HomeScreenState extends State<HomeScreen> {
             fontSize: 18,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const OrderHistoryScreen()),
+              );
+            },
+            icon: const Icon(Icons.assignment_outlined, color: Colors.white),
+            tooltip: 'Lịch sử đơn hàng',
+          ),
+          Consumer<CartProvider>(
+            builder: (context, cart, _) {
+              return badges.Badge(
+                showBadge: cart.totalItems > 0,
+                badgeContent: Text(
+                  '${cart.totalItems}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+                badgeStyle: const badges.BadgeStyle(
+                  badgeColor: Color(0xFFFFD54F),
+                  padding: EdgeInsets.all(5),
+                ),
+                position: badges.BadgePosition.topEnd(top: 4, end: 2),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CartScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.shopping_cart_outlined,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 4),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(64),
           child: Padding(
@@ -221,39 +266,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Consumer<CartProvider>(
-                  builder: (context, cart, _) {
-                    return badges.Badge(
-                      showBadge: cart.totalItems > 0,
-                      badgeContent: Text(
-                        '${cart.totalItems}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                        ),
-                      ),
-                      badgeStyle: const badges.BadgeStyle(
-                        badgeColor: Color(0xFFFFD54F),
-                        padding: EdgeInsets.all(5),
-                      ),
-                      position: badges.BadgePosition.topEnd(top: 4, end: 2),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const CartScreen(),
-                            ),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.shopping_cart_outlined,
-                          color: Colors.white,
-                        ),
-                      ),
-                    );
-                  },
                 ),
               ],
             ),

@@ -1,9 +1,15 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:th4_e_commerce_app/models/cart_item.dart';
 import 'package:th4_e_commerce_app/models/product.dart';
 
 class CartProvider extends ChangeNotifier {
-  final Map<String, CartItem> _items = <String, CartItem>{};
+  Map<String, CartItem> _items = <String, CartItem>{};
+
+  CartProvider() {
+    _loadFromPrefs();
+  }
 
   List<CartItem> get items => _items.values.toList();
 
@@ -25,6 +31,29 @@ class CartProvider extends ChangeNotifier {
     return '$productId-$size-$color';
   }
 
+  Future<void> _saveToPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cartData = _items.map((key, value) => MapEntry(key, value.toJson()));
+    await prefs.setString('cart_items', json.encode(cartData));
+  }
+
+  Future<void> _loadFromPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!prefs.containsKey('cart_items')) return;
+
+      final extractedData = json.decode(prefs.getString('cart_items')!) as Map<String, dynamic>;
+      final Map<String, CartItem> loadedItems = {};
+      extractedData.forEach((key, value) {
+        loadedItems[key] = CartItem.fromJson(value);
+      });
+      _items = loadedItems;
+      notifyListeners();
+    } catch (error) {
+      debugPrint('Error loading cart: $error');
+    }
+  }
+
   void addProduct(Product product, {int quantity = 1, String size = 'M', String color = 'Xanh'}) {
     final key = _generateKey(product.id, size, color);
     final existing = _items[key];
@@ -39,16 +68,19 @@ class CartProvider extends ChangeNotifier {
       );
     }
     notifyListeners();
+    _saveToPrefs();
   }
 
   void removeProduct(String key) {
     _items.remove(key);
     notifyListeners();
+    _saveToPrefs();
   }
 
   void clearCart() {
     _items.clear();
     notifyListeners();
+    _saveToPrefs();
   }
 
   void toggleSelection(String key) {
@@ -56,6 +88,7 @@ class CartProvider extends ChangeNotifier {
     if (item == null) return;
     item.selected = !item.selected;
     notifyListeners();
+    _saveToPrefs();
   }
 
   void setSelection(String key, bool selected) {
@@ -63,6 +96,7 @@ class CartProvider extends ChangeNotifier {
     if (item == null) return;
     item.selected = selected;
     notifyListeners();
+    _saveToPrefs();
   }
 
   void setAllSelected(bool selected) {
@@ -70,6 +104,7 @@ class CartProvider extends ChangeNotifier {
       item.selected = selected;
     }
     notifyListeners();
+    _saveToPrefs();
   }
 
   void incrementQuantity(String key) {
@@ -77,6 +112,7 @@ class CartProvider extends ChangeNotifier {
     if (item == null) return;
     item.quantity += 1;
     notifyListeners();
+    _saveToPrefs();
   }
 
   void decrementQuantity(String key) {
@@ -85,6 +121,7 @@ class CartProvider extends ChangeNotifier {
     if (item.quantity > 1) {
       item.quantity -= 1;
       notifyListeners();
+      _saveToPrefs();
     }
   }
 }

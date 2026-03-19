@@ -23,8 +23,8 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     final ratingJson = json['rating'];
-    final rateValue = ratingJson is Map ? ratingJson['rate'] : 0;
-    final countValue = ratingJson is Map ? ratingJson['count'] : 0;
+    final rateValue = ratingJson is Map ? (ratingJson['rate'] ?? 0) : 0;
+    final countValue = ratingJson is Map ? (ratingJson['count'] ?? 0) : 0;
 
     final imageValue = json['image']?.toString() ?? '';
     final rawImages = json['images'];
@@ -41,13 +41,29 @@ class Product {
     return Product(
       id: (json['id'] as num?)?.toInt() ?? 0,
       title: json['title']?.toString() ?? '',
-      price: (json['price'] as num?)?.toDouble() ?? 0,
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
       description: json['description']?.toString() ?? '',
       category: json['category']?.toString() ?? '',
       image: imageValue,
       images: resolvedImages,
-      rating: (rateValue as num?)?.toDouble() ?? 0,
+      rating: (rateValue as num?)?.toDouble() ?? 0.0,
       ratingCount: (countValue as num?)?.toInt() ?? 0,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'price': price,
+      'description': description,
+      'category': category,
+      'image': image,
+      'images': images,
+      'rating': {
+        'rate': rating,
+        'count': ratingCount,
+      },
+    };
   }
 }
